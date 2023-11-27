@@ -19,8 +19,6 @@ public class DbInitializer
             .Key(x => x.Color, KeyType.Text)
             .CreateAsync();
     
-        var count = await DB.CountAsync<Item>();
-
         using var scope = builder.Services.CreateScope();
         
         var httpClient = scope.ServiceProvider.GetRequiredService<AuctionServiceHttpClient>();
