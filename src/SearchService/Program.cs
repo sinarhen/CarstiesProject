@@ -12,39 +12,34 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddHttpClient<AuctionServiceHttpClient>().AddPolicyHandler(GetPolicy());
 builder.Services.AddMassTransit(x =>
 {
     x.AddConsumersFromNamespaceContaining<AuctionCreatedConsumer>();
-    x.AddConsumersFromNamespaceContaining<AuctionUpdatedConsumer>();
-    x.AddConsumersFromNamespaceContaining<AuctionDeletedConsumer>();
     
     x.SetEndpointNameFormatter(new KebabCaseEndpointNameFormatter("search", false));
     
     x.UsingRabbitMq((context, cfg) =>
     {
-        cfg.ReceiveEndpoint("search-auction-create", e =>
+        cfg.ReceiveEndpoint("search-auction-created", e =>
         {
             e.UseMessageRetry(r => r.Interval(5, 5));
             e.ConfigureConsumer<AuctionCreatedConsumer>(context);
         });
         
-        
-        cfg.ReceiveEndpoint("search-auction-update", e =>
-        {
-            e.UseMessageRetry(r => r.Interval(5, 5));
-            e.ConfigureConsumer<AuctionUpdatedConsumer>(context);
-        });
-        
-        
-        cfg.ReceiveEndpoint("search-auction-delete", e =>
-        {
-            e.UseMessageRetry(r => r.Interval(5, 5));
-            e.ConfigureConsumer<AuctionDeletedConsumer>(context);
-        });
+        //
+        // cfg.ReceiveEndpoint("search-auction-update", e =>
+        // {
+        //     e.UseMessageRetry(r => r.Interval(5, 5));
+        //     e.ConfigureConsumer<AuctionUpdatedConsumer>(context);
+        // });
+        //
+        //
+        // cfg.ReceiveEndpoint("search-auction-delete", e =>
+        // {
+        //     e.UseMessageRetry(r => r.Interval(5, 5));
+        //     e.ConfigureConsumer<AuctionDeletedConsumer>(context);
+        // });
         
         cfg.ConfigureEndpoints(context);
     });
