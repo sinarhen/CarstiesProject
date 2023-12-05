@@ -23,7 +23,7 @@ const renderer = ({ days, hours, minutes, seconds, completed }: {
             text-white py-1 px-2 
             rounded-lg flex justify-center
             ${completed ? 
-                'bg-red-600' : (days == 0 && hours < 10) ? 'bg-amber-600' : 'bg-green-600'}
+                'bg-red-700' : (days == 0 && hours < 10) ? 'bg-amber-700' : 'bg-green-700'}
         `}>
            {completed ? (
             <span>Auction finished</span>
