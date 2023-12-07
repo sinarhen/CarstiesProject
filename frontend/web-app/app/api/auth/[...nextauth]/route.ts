@@ -13,9 +13,27 @@ export const authOptions: NextAuthOptions = {
 
     }),
   ],
+  callbacks: {
+    async jwt({token, profile, account, user}) {
+      if (profile){
+        token.username = profile.username;
+      }
+      if (account){
+        token.access_token = account.access_token;
+      }
+      return token;
+    },
+    async session({session, token}){
+      if (token){
+        session.user.username = token.username;
+      }
+      return session;
+    }
+  },
   session: {
-    strategy: 'jwt',
-  }
+    strategy: "jwt",
+  },
+  secret: process.env.NEXTAUTH_SECRET
 
 }
 

@@ -1,21 +1,31 @@
-import {getSession} from "@/app/actions/authActions";
-import Heading from "@/components/Heading";
-import {Header} from "antd/es/layout/layout";
-
-export default async function Session(){
+import {getSession, getTokenWorkaround} from "@/app/actions/authActions";
+import Heading from '@/components/Heading'
+import {redirect} from "next/navigation";
+import AuthTest from "@/app/session/AuthTest";
+export default async function Page(){
   const session = await getSession();
-
+  const token = await getTokenWorkaround();
+  if (!session){
+    return redirect('/');
+  }
 
   return (
     <div>
-      <Header>
-        Session dashboard
-      </Header>
-      <div className='bg-blue-200 border-2 border-blue-500'>
+      
+      <div className='bg-blue-200 border-2 p-8 border-blue-500'>
         <h3 className='text-lg'>
           Session data
         </h3>
         <pre>{JSON.stringify(session, null, 2)}</pre>
+      </div>
+      <div className="mt-4">
+        <AuthTest />
+      </div>
+      <div className='bg-green-200 border-2 p-8 border-blue-500 mt-4'>
+        <h3 className='text-lg'>
+          Token data
+        </h3>
+        <pre className='overflow-auto'>{JSON.stringify(token, null, 2)}</pre>
       </div>
     </div>
   )
