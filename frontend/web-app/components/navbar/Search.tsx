@@ -3,8 +3,13 @@
 import React, {FunctionComponent, useState} from 'react';
 import {FaSearch} from "react-icons/fa";
 import {useParamsStore} from "@/hooks/useParamsStore";
+import { usePathname, useRouter } from 'next/navigation';
 
 const Search = () => {
+  const router = useRouter();
+  const pathname = usePathname();
+
+
   const setParams = useParamsStore(state => state.setParams);
 
   const setValue = useParamsStore(state => state.setSearchValue);
@@ -13,7 +18,10 @@ const Search = () => {
   function onChange(event: any){
     setValue(event.target.value);
   }
+
   function search(){
+    if (pathname !== '/') router.push('/');
+
     setParams({searchTerm: value})
   }
 

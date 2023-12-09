@@ -6,7 +6,7 @@ import React from 'react';
 import Image from 'next/image';
 import DetailedSpecs from './components/DetailedSpecs';
 import { getCurrentUser } from '@/app/actions/authActions';
-import { EditButton } from "./components/EditButton.1";
+import { EditButton } from "./components/EditButton";
 import CarImage from '@/components/auctions/CarImage';
 import DeleteAuctionButton  from './components/DeleteAuctionButton';
 
@@ -27,10 +27,10 @@ export default async function Details({params}: {
         <div>
           <Heading title={data.make + " " + data.model}/>
           {user?.username == data.seller && (
-            <>
+            <div className='gap-x-3'>
               <EditButton initialValues={data}/>
               <DeleteAuctionButton auctionId={data.id}/>          
-            </>
+            </div>
           )}
           
         </div>

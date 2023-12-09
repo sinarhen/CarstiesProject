@@ -1,3 +1,5 @@
+'use client';
+
 import { Button } from "@/components/ui/button";
 import {
     Dialog,
@@ -11,15 +13,23 @@ import {
 } from "@/components/ui/dialog";
 
 import { deleteAuction } from "@/app/actions/auctionActions";
+import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 
 export default function DeleteButton({
     auctionId,
 }: {
     auctionId: string;
 }) {
-
-    const onDeleteConfirmation = () => {
-        const res = deleteAuction(initialValues.id);
+    const router = useRouter();
+    async function onDeleteConfirmation(){
+        const res = await deleteAuction(auctionId);
+        if (res?.error) {
+          toast.error(res.error.message || "Something went wrong");
+          return;
+        }
+        toast.success("Auction deleted successfully");
+        router.push('/');
     }
     return (
         <Dialog>
@@ -34,12 +44,11 @@ export default function DeleteButton({
                     </DialogDescription>
                 </DialogHeader>
                 <DialogFooter>
-                    <DialogClose asChild>
-
-                        <Button variant="outline" onClick={onDeleteConfirmation}>
+                    <DialogClose>
+                        <Button variant="destructive" onClick={onDeleteConfirmation}>
                             Yes
                         </Button>
-                        <Button variant="outline">
+                        <Button className="ml-3" variant="outline">
                             No
                         </Button>
                     </DialogClose>
