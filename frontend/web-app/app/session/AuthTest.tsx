@@ -1,8 +1,8 @@
 'use client';
 
 import React, {useState} from 'react';
-import {UpdateAuctionTest} from "@/app/actions/auctionActions";
-import {Button} from "antd";
+import {updateAuctionTest} from "@/app/actions/auctionActions";
+import {Button} from "@/components/ui/button";
 
 function AuthTest() {
   const [isLoading, setIsLoading] = useState(false);
@@ -11,13 +11,13 @@ function AuthTest() {
   function doUpdate(){
     setResult(undefined);
     setIsLoading(true);
-    UpdateAuctionTest().
+    updateAuctionTest().
       then(res => setResult(res))
       .finally(() => setIsLoading(false))
   }
   return (
     <div className='flex items-center gap-4 '>
-      <Button loading={isLoading} onClick={doUpdate}>
+      <Button onClick={doUpdate}>
         Test auth
       </Button>
       <div>

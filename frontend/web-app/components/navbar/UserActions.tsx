@@ -2,93 +2,104 @@
 
 import React from 'react';
 import {User} from "next-auth";
-import {Dropdown, MenuProps, Space} from "antd";
 import Link from "next/link";
-import {DownOutlined, SmileOutlined} from "@ant-design/icons";
 import {HiCog, HiUser} from "react-icons/hi2";
 import {AiFillCar, AiFillTrophy} from "react-icons/ai";
 import {signOut} from "next-auth/react";
+import {usePathname, useRouter} from "next/navigation";
+import {useParamsStore} from "@/hooks/useParamsStore";
+
+
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import {Button} from "@/components/ui/button";
+import {RxDropdownMenu} from "react-icons/rx";
+import {ArrowDown, ChevronDown} from "lucide-react";
+import {DropdownMenuArrow} from "@radix-ui/react-dropdown-menu";
 
 type Props = {
   user: Partial<User>
 }
-const getMenu = (user: string): MenuProps['items']=> {
-  return [
-    {
-      key: '0',
-      label: (
-        <p>
-          Hello {user}
-        </p>
-      ),
-      disabled: true,
-    },
-    {
-      type: "divider"
-    },
-    {
-      key: '1',
-      label: (
-        <Link href='/'>
-          MyAuctions
-        </Link>
-      ),
-      icon: <HiUser/>,
-    },
-    {
-      key: '2',
-      label: (
-        <Link href='/'>
-          Auctions won
-        </Link>
-      ),
-      icon: <AiFillTrophy/>,
-    },
-    {
-      key: '3',
-      label: (
-        <Link href="/">
-          Sell my car
-        </ Link>
-      ),
-      icon: <AiFillCar/>
-    },
-    {
-      type: "divider"
-    },
-    {
 
-      key: '4',
-      danger: true,
-      label: (
-        <button onClick={() => signOut({callbackUrl: "/session"})}>
-          Sign out
-        </button>
-      ),
-      icon: HiCog
-    },
-    {
-      key: '5',
-      label: (
-        <Link href='/session' >
-          Session (dev only)
-        </Link>
-      ),
-      icon: <HiCog />
-    },
-  ];
-}
 export default function UserActions({user}: Props){
-  const items: MenuProps['items'] = getMenu(user.name ?? "");
-  return (
+  const router = useRouter();
+  const pathname = usePathname();
+  const setParams = useParamsStore(state => state.setParams);
 
-    <Dropdown trigger={['click']} arrow menu={{items}}>
-      <a className="hover:text-red-500 font-medium cursor-pointer transition-colors" onClick={(e) => e.preventDefault()}>
-        <Space>
-          {user.name}
-          <DownOutlined />
-        </Space>
-      </a>
-    </Dropdown>
+  function setWinner() {
+    setParams({winner: user.username, seller: undefined})
+    if (pathname !== '/') router.push('/');
+  }
+
+  function setSeller() {
+    setParams({winner: undefined, seller: user.username})
+    if (pathname !== '/') router.push('/');
+  }
+
+
+  return (
+  <div className='transition-colors'>
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild >
+        <p className="flex cursor-pointer font-medium hover:text-red-600 transition-colors items-center">
+          {user.username}
+          <ChevronDown />
+        </p>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent className="w-56">
+        <DropdownMenuLabel>Welcome, {user.username}</DropdownMenuLabel>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem onClick={setSeller} className='cursor-pointer hover:text-red-600'>
+          <div className='flex items-center gap-x-1'>
+            <HiUser/>
+              My Auctions
+          </div>
+        </DropdownMenuItem>
+
+        <DropdownMenuItem className="cursor-pointer hover:text-red-600">
+          <div className='flex items-center gap-x-1'>
+            <AiFillTrophy className='h-full w-auto' />
+            <button onClick={setWinner}>
+              Auctions won
+            </button>
+          </div>
+        </DropdownMenuItem>
+
+        <DropdownMenuItem className='cursor-pointer hover:text-red-600'>
+          <div className='flex items-center gap-x-1'>
+            <AiFillCar className='h-full w-auto' />
+            <Link href="/auctions/create">
+              Sell my car
+            </ Link>
+          </div>
+        </DropdownMenuItem>
+
+        <DropdownMenuItem onClick={() => signOut({callbackUrl: "/session"})} className='cursor-pointer duration-500 text-end text-red-700 hover:bg-red-200'>
+
+          Sign out
+
+        </DropdownMenuItem>
+
+        <DropdownMenuItem onClick={() => router.push('/session')} className='cursor-pointer hover:text-red-600'>
+          <div className='flex items-center gap-x-1'>
+            <HiCog className='h-full w-auto' />
+            Session (dev only)
+
+          </div>
+        </DropdownMenuItem>
+
+
+
+
+      </DropdownMenuContent>
+    </DropdownMenu>
+
+  </div>
   )
 }

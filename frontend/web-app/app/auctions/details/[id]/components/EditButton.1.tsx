@@ -1,0 +1,38 @@
+import { Button } from "@/components/ui/button";
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Auction } from "@/types";
+import EditForm from './EditForm';
+
+
+export function EditButton({
+    initialValues,
+}: {
+    initialValues: Auction;
+}) {
+    return (
+        <Dialog>
+            <DialogTrigger asChild>
+                <Button variant="outline">Edit Auction</Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-[425px]">
+                <DialogHeader>
+                    <DialogTitle>Edit auction</DialogTitle>
+                    <DialogDescription>
+                        Make changes to your auction here. Click save when you're done.
+                    </DialogDescription>
+                </DialogHeader>
+                <EditForm initialValues={initialValues} />
+            </DialogContent>
+    </Dialog >
+    );
+}

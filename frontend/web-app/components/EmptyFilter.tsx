@@ -3,7 +3,7 @@
 import React, { FunctionComponent } from 'react';
 import {useParamsStore} from "@/hooks/useParamsStore";
 import Heading from "@/components/Heading";
-import {Button} from "antd";
+import {Button} from "@/components/ui/button";
 import {signIn} from "next-auth/react";
 
 type Props = {
@@ -33,7 +33,7 @@ const EmptyFilter: FunctionComponent<Props> = ({
           </Button>
         )}
         {showLogin && (
-          <Button color="red" size="large" onClick={() => signIn('id-server', {callbackUrl})}>
+          <Button onClick={() => signIn('id-server', {callbackUrl})}>
             Login
           </Button>
         )}

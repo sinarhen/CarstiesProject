@@ -1,7 +1,7 @@
 'use client'
 
 import React, { FunctionComponent } from 'react';
-import {Button} from "antd";
+import {Button} from "@/components/ui/button";
 import { signIn } from 'next-auth/react';
 
 interface OwnProps {}

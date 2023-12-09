@@ -21,6 +21,8 @@ const Listings = () => {
     searchTerm: state.searchTerm,
     orderBy: state.orderBy,
     filterBy: state.filterBy,
+    seller: state.seller,
+    winner: state.winner,
   }), shallow);
 
 
@@ -43,11 +45,11 @@ const Listings = () => {
   return (
     <>
       <Filters/>
-      {data.pageCount === 0 ? <EmptyFilter/> :
+      {data.pageCount === 0 ? <EmptyFilter showReset /> :
         (
           <>
             <div className="grid grid-cols-4 gap-6">
-              {data?.results.map(auction => (
+              {data?.results?.map(auction => (
                 <AuctionCard key={auction.id} auction={auction}/>
               ))}
             </div>
