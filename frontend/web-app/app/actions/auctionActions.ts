@@ -2,6 +2,7 @@
 
 import {Auction, PageResult, TCreateAuctionFormSchema, TEditAuctionFormSchema} from "@/types";
 import { fetchWrapper } from "@/lib/fetchWrapper";
+import axios from "axios";
 
 export async function getData(query: string): Promise<PageResult<Auction>>{
   return await fetchWrapper.get('search' + query);
@@ -22,6 +23,15 @@ export type Error = {
     status: number,
     message: string
   }
+}
+
+export async function uploadImage(file: string | Blob) {
+  const formData = new FormData();
+  formData.append('upload_preset', process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET!);
+  formData.append('api_key', process.env.NEXT_PUBLIC_CLOUDINARY_API_KEY!);
+  formData.append('api_secret', process.env.NEXT_PUBLIC_CLOUDINARY_API_SECRET!);
+  
+  return
 }
 
 export async function getAuction(id: string): Promise<Auction> {

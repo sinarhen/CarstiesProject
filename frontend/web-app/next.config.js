@@ -6,6 +6,12 @@ const nextConfig = {
                 "protocol": "https",
                 "hostname": 'cdn.pixabay.com',
                 "pathname": '**',
+            },
+            {
+                "protocol": "https",
+                "hostname": 'upload-widget.cloudinary.com',
+                "pathname": '**',
+                
             }
         ]
     }
