@@ -12,7 +12,7 @@ import {
     DialogClose
 } from "@/components/ui/dialog";
 
-import { deleteAuction } from "@/app/actions/auctionActions";
+import { deleteAuction } from "@/actions/auctionActions";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 

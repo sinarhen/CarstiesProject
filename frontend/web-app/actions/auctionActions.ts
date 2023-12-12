@@ -3,9 +3,12 @@
 import {Auction, PageResult, TCreateAuctionFormSchema, TEditAuctionFormSchema} from "@/types";
 import { fetchWrapper } from "@/lib/fetchWrapper";
 import axios from "axios";
+import { revalidatePath } from "next/cache";
 
 export async function getData(query: string): Promise<PageResult<Auction>>{
-  return await fetchWrapper.get('search' + query);
+  const res = await fetchWrapper.get('search' + query);
+  revalidatePath('/');
+  return res;
 }
 
 
@@ -39,13 +42,19 @@ export async function getAuction(id: string): Promise<Auction> {
 }
 
 export async function createAuction(auction: TCreateAuctionFormSchema) {
-  return await fetchWrapper.post('auctions/', auction);
+  const res = fetchWrapper.post('auctions/', auction);
+  revalidatePath('/');
+  return res;
 }
 
 export async function updateAuction(id: string, auction: TEditAuctionFormSchema) {
-  return await fetchWrapper.put('auctions/' + id, auction);
+  const res = await fetchWrapper.put('auctions/' + id, auction);
+  revalidatePath(`/auctions/details/${id}`);
+  return res;
 }
 
 export async function deleteAuction(id: string) {
-  return await fetchWrapper.delete('auctions/' + id);
+  const res = await fetchWrapper.delete('auctions/' + id);
+  revalidatePath(`/auctions/details/${id}`);
+  return res
 }

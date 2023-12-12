@@ -1,7 +1,7 @@
 'use client';
 
 import React, {useState} from 'react';
-import {updateAuctionTest} from "@/app/actions/auctionActions";
+import {updateAuctionTest} from "@/actions/auctionActions";
 import {Button} from "@/components/ui/button";
 
 function AuthTest() {

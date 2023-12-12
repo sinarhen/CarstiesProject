@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useState } from 'react';
-import { useForm} from "react-hook-form";
+import React, { useCallback, useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
 
 import {
   Select,
@@ -9,96 +9,109 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
+} from '@/components/ui/select';
 
-import 'react-datepicker/dist/react-datepicker.css'
+import 'react-datepicker/dist/react-datepicker.css';
 
 
-import { Button } from "@/components/ui/button"
+import { isValidURLImage } from '@/lib/utils';
+import { Button } from '@/components/ui/button';
 import {
   Form,
-  FormControl, FormDescription,
+  FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
+} from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
 
-import { zodResolver } from "@hookform/resolvers/zod";
+import { zodResolver } from '@hookform/resolvers/zod';
 
 const currentYear = new Date().getFullYear();
 
-
-
 import DatePicker from 'react-datepicker';
-import { createAuction, uploadImage } from '@/app/actions/auctionActions';
+import { createAuction } from '@/actions/auctionActions';
 import { TCreateAuctionFormSchema, createAuctionFormSchema } from '@/types';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
-import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { DialogTrigger } from '@radix-ui/react-dialog';
-import { AspectRatio } from '@radix-ui/react-aspect-ratio';
-import CarImage from '@/components/auctions/CarImage';
-
-
-
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
+import CarImage from '@/components/CarImage';
+import { Trash, Trash2 } from 'lucide-react';
 
 const AuctionForm = () => {
+  // State
+  const [openImageUrlDialog, setOpenImageUrlDialog] = useState(false);
+  const [imageUrlDialogTempInput, setImageUrlDialogTempInput] = useState('');
+  const [inputType, setInputType] = useState<'file' | 'url'>('file');
+  const [tempSrcUrlForFile, setTempSrcUrlForFile] = useState<string | null>(null);
 
+  // Form
   const form = useForm<TCreateAuctionFormSchema>({
     resolver: zodResolver(createAuctionFormSchema),
     defaultValues: {
-      make: "",
-      model: "",
+      make: '',
+      model: '',
       year: 2023,
       mileage: 0,
-      color: "Black",
-      imageUrl: "",
+      color: 'Black',
+      imageUrl: '',
     },
-    mode: "onTouched",
+    mode: 'onTouched',
   });
+
+  // Router
   const router = useRouter();
 
-  async function onSubmit(values: TCreateAuctionFormSchema) {
-    
-    const formData = new FormData();
-    formData.append('file', values?.image?.files[0]);
-    formData.append('upload_preset', 'gwuh0xnp');
-    const imageUploaded = await axios.post(`https://api.cloudinary.com/v1_1/dhnkvzuxk/image/upload`, formData);
-    console.log(imageUploaded);
-    console.log(imageUploaded.data.secure_url);
+  // Functions
+  const toogleImageUrlDialog = () => {
+    setOpenImageUrlDialog(!openImageUrlDialog);
+  };
 
-    values.image = imageUploaded.data.secure_url;
+  const onSubmit = async (values: TCreateAuctionFormSchema) => {
+    const formData = new FormData();
+    if (inputType === 'file') {
+      formData.append('file', values?.imageUrl);
+      formData.append('upload_preset', 'gwuh0xnp');
+      const imageUploaded = await axios.post(
+        'https://api.cloudinary.com/v1_1/dhnkvzuxk/image/upload',
+        formData
+      );
+      values.imageUrl = imageUploaded.data.secure_url;
+    }
 
     const res = await createAuction(values);
-    console.log(res)
     if (res?.error) {
-      toast.error(res.error.message || "Something went wrong");
+      toast.error(res.error.message || 'Something went wrong');
       return;
     }
     router.push(`/auctions/details/${res?.id}`);
-  }
+  };
 
-  const [openImageUrlDialog, setOpenImageUrlDialog] = useState(false);
-  const [inputType, setInputType] = useState('file');
-  
-  const [uploadedImageAsUrl, setUploadedImageAsUrl] = useState(null);
-  const imageToUrl = (e: any) => {
-    const reader = new FileReader();
-
-    reader.readAsDataURL(e.target.files[0]);
-    reader.onloadend = () => {
-      setUploadedImageAsUrl(reader.result as string);
+  const setImageUrlFromFile = useCallback((file: File | null | undefined): void => {
+    if (!file) {
+      return;
     }
+
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onloadend = () => {
+      setTempSrcUrlForFile(reader.result as string);
+    };
+  }, [setTempSrcUrlForFile]);
   
-  }
-  const toogleImageUrlDialog = () => {
-    setOpenImageUrlDialog(!openImageUrlDialog);
-  }
-  console.log(form.formState.errors)
   return (
+    <>
     <Form {...form}>
       <form encType="multipart/form-data" onSubmit={form.handleSubmit(onSubmit)} className="gap-x-4 gap-y-8 grid grid-cols-12">
         <FormField
@@ -134,11 +147,18 @@ const AuctionForm = () => {
             <FormItem className="col-span-3">
               <FormLabel>Year</FormLabel>
                 <FormControl>
-                  <Select>
+                  <Select onValueChange={(value) => {
+                  try {
+                    field.onChange(parseInt(value));
+                  } catch (e) {
+                    form.setError('year', {message: 'Invalid year'})
+                  }
+
+                }}>
                         <SelectTrigger className='mt-0'>
                           <SelectValue className='mt-0' placeholder="Year" />
                         </SelectTrigger>
-                        <SelectContent>
+                        <SelectContent >
                           {new Array(currentYear - 1886).fill(0)
                             .map((_, i) => (
                               <SelectItem value={`${currentYear - i}`}>
@@ -192,7 +212,9 @@ const AuctionForm = () => {
             <FormItem className='absolute'>
                 <Dialog open={openImageUrlDialog} onOpenChange={() => {
                   toogleImageUrlDialog();
-                  form.resetField('imageUrl');
+                  if (!form.getValues('imageUrl')) {
+                    form.resetField('imageUrl');
+                  }
                 } }>
                   <DialogContent >
                     <DialogHeader>
@@ -203,16 +225,18 @@ const AuctionForm = () => {
                         Paste URL of image of your car below
                       </DialogDescription>
                       <FormControl>
-                        <Input {...field} />
-                        
+                        <Input {...field} value={imageUrlDialogTempInput} onChange={(e) => setImageUrlDialogTempInput(e.target.value)}/>  
                       </FormControl>
-                      <span className='text-xs text-red-500'>{form?.formState?.errors?.imageUrl?.message}</span>
+                      <FormMessage/>
                       <DialogFooter>
                         <DialogClose asChild>
                           <Button 
-                            disabled={form?.formState?.errors?.imageUrl?.message ? true : false}
+                            disabled={!isValidURLImage(imageUrlDialogTempInput)}
                             onClick={() => {
-                              form.setValue('imageUrl', '');
+                              field.onChange(imageUrlDialogTempInput);
+                              setImageUrlDialogTempInput("");
+                              setInputType("url");
+                              setTempSrcUrlForFile(null);
                             }}
                           > 
                             Save
@@ -234,34 +258,62 @@ const AuctionForm = () => {
         </FormField>
         <FormField
           control={form.control}
-          name="image"
-          render={({ field, }) => (
+          name="imageUrl"
+          render={({ field }) => (
             <FormItem className='col-span-6'>
               <FormLabel>
-                Image
-                
-                <span className='cursor-pointer ml-2 text-xs text-gray-400' onClick={toogleImageUrlDialog}>
-                  Paste url
-                </span>
+                    Image
+
+                    <span className='cursor-pointer right-0 ml-2 text-xs text-gray-400' onClick={toogleImageUrlDialog}>
+                      Paste url
+                    </span>
+
               </FormLabel>
-              <AspectRatio ratio={16 / 9} className='w-full'>
-                <CarImage imageUrl={''}/>
-              </AspectRatio>
-                <FormControl>
-                    <div className='flex items-center gap-1'>
-                      <Input 
-                      id='image' 
-                      onChange={(e) => {;
-                        field.onChange(e.target?.files[0]);
-                        form.setValue('imageUrl', undefined);
+              
+              {
+                (tempSrcUrlForFile || field.value) && (
+                  <div className='w-full relative bg-gray-200 overflow-hidden rounded-lg'>
+                    <CarImage  imageUrl={tempSrcUrlForFile ?? field.value}/>
+                      
+                  <span className='text-xs flex items-center justify-center absolute right-2 top-3 hover:bg-red-500 bg-white/30 transition-colors cursor-pointer backdrop-blur-sm w-9 h-9 rounded-lg border border-black' onClick={() => {
+                    form.setValue('imageUrl', '');
+                    if (inputType === 'file')
+                    {
+                    setTempSrcUrlForFile(null);
+                      
+                    } else if (inputType === 'url') {
+                      setInputType('file');
+                    }
+                  }}>
+
+                    <Trash2 className='w-1/2 h-1/2'/>                 
+                  </span>
+                </div>
+                )
+              }
+              <FormControl className='block'>
+                    <div className='block'>
+                      <Input
+                      style={{display: 'block'}}
+                      multiple={false}
+                      onChange={(e) => {
+                        if (!e?.target?.files[0]) {
+                          console.log('no file')
+                          return;
+                        }
+                        console.log('file found: ', e?.target?.files[0])
+                        field.onChange(e?.target?.files[0])
+                        setImageUrlFromFile(e?.target?.files[0]);
+                        setInputType("file");
                       }} type='file' />
                             
                     </div>
                 </FormControl>
-              <FormMessage />
               <FormDescription >
                 Should be a valid URL or a file
               </FormDescription>
+              <FormMessage />
+
             </FormItem>
           )}
         />
@@ -350,7 +402,7 @@ const AuctionForm = () => {
         
       </form>
     </Form>
-
+    </>
   )
 }
 

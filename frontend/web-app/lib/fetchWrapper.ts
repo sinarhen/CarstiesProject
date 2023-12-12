@@ -1,9 +1,9 @@
-import { getTokenWorkaround } from "@/app/actions/authActions";
+import { getTokenWorkaround } from "@/actions/authActions";
 
 const baseUrl = 'http://localhost:6001/';
 
 async function get(url: string){
-    console.log("[fetchWrapper] get: ", url, " baseUrl: ", baseUrl, " headers:", await getHeaders());
+    // console.log("[fetchWrapper] get: ", url, " baseUrl: ", baseUrl, " headers:", await getHeaders());
     try {
         const requestOptions = {
             method: 'GET',

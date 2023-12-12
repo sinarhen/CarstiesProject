@@ -13,19 +13,19 @@ export const createAuctionFormSchema = z.object({
   model: z.string().min(1, "Model is required").max(50),
   year: z.number().min(1886, "First Car was created 1886!").max(currentYear),
   mileage: z.number().optional(),
-  image: z.any().optional(),
-  imageUrl: z.string().url().optional().default(''),
+  imageUrl: z.any().optional(),
   color: z.string().min(1),
   auctionEnd: z.date().min(new Date(Date.now() + 24 * 60 * 60 * 1000), "Auction must be at least 24 hours in the future"),
   reservePrice: z.number().default(0),
-}).refine(
-  data => data?.imageUrl?.length && data.image !== null || data.image !== undefined,
-);
+});
 
 export const editAuctionFormSchema = z.object({
   make: z.string().min(1, "Make is required").max(50),
   model: z.string().min(1, "Model is required").max(50),
-  year: z.number().min(1886, "First Car was created 1886!").max(currentYear),
+  year: z.number().min(1886, "First Car was created 1886!").max(currentYear)
+  // .or(z.any())
+  , 
+  imageUrl: z.any().optional(),
   mileage: z.number().optional(),
   color: z.string().min(1),
 });

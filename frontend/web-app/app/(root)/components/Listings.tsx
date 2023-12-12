@@ -4,7 +4,7 @@
 import AuctionCard from "./AuctionCard";
 import {Auction, PageResult} from "@/types";
 import {useEffect, useState} from "react";
-import {getData} from "@/app/actions/auctionActions";
+import {getData} from "@/actions/auctionActions";
 import Filters from "@/components/Filters";
 import {useParamsStore} from "@/hooks/useParamsStore";
 import {shallow} from "zustand/shallow";

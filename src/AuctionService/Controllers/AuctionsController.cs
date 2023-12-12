@@ -136,6 +136,7 @@ public class AuctionsController : ControllerBase
         auction.Item.Color = auctionDto.Color ?? auction.Item.Color;
         auction.Item.Mileage = auctionDto.Mileage ?? auction.Item.Mileage;
         auction.Item.Year = auctionDto.Year ?? auction.Item.Year;
+        auction.Item.ImageUrl = auctionDto.ImageUrl ?? auction.Item.ImageUrl;
 
         var newAuction = _mapper.Map<AuctionDto>(auction);
 

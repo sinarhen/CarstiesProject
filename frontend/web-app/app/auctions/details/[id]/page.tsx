@@ -1,14 +1,12 @@
-import { getAuction } from '@/app/actions/auctionActions';
+import { getAuction } from '@/actions/auctionActions';
 import Heading from '@/components/Heading';
-import CountdownTimer from '@/components/auctions/CountdownTimer';
-import { AspectRatio } from '@/components/ui/aspect-ratio';
+import CountdownTimer from '@/components/CountdownTimer';
 import React from 'react';
-import Image from 'next/image';
 import DetailedSpecs from './components/DetailedSpecs';
-import { getCurrentUser } from '@/app/actions/authActions';
+import { getCurrentUser } from '@/actions/authActions';
 import { EditButton } from "./components/EditButton";
-import CarImage from '@/components/auctions/CarImage';
 import DeleteAuctionButton  from './components/DeleteAuctionButton';
+import ExtendableImage from '@/components/ExtendableImage';
 
 
 export default async function Details({params}: {
@@ -42,10 +40,7 @@ export default async function Details({params}: {
       </div>
       <div className='grid grid-cols-2 gap-6 mt-3'>
         <div className='w-full bg-gray-200 rounded-lg overflow-hidden'>
-          <AspectRatio ratio={16 / 10}>
-            <CarImage 
-              imageUrl={data.imageUrl} />
-          </AspectRatio>
+          <ExtendableImage imageUrl={data.imageUrl} />
         </div>
         <div className='border-2 rounded-lg p-2 bg-gray-100'>
           <Heading title='Bids'/>

@@ -1,7 +1,7 @@
 import type { FC } from 'react';
 
-import CountdownTimer from '@/components/auctions/CountdownTimer';
-import CarImage from '@/components/auctions/CarImage';
+import CountdownTimer from '@/components/CountdownTimer';
+import CarImage from '@/components/CarImage';
 import { Auction } from "@/types";
 import React from "react";
 import Link from "next/link";

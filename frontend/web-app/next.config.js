@@ -9,10 +9,10 @@ const nextConfig = {
             },
             {
                 "protocol": "https",
-                "hostname": 'upload-widget.cloudinary.com',
+                "hostname": 'res.cloudinary.com',
                 "pathname": '**',
                 
-            }
+            },
         ]
     }
 }

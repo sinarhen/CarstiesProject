@@ -24,7 +24,7 @@ export function EditButton({
             <DialogTrigger asChild>
                 <Button variant="outline">Edit Auction</Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-[425px]">
+            <DialogContent className="lg:max-w-screen-md overflow-y-scroll max-h-screen sm:max-w-[425px]">
                 <DialogHeader>
                     <DialogTitle>Edit auction</DialogTitle>
                     <DialogDescription>

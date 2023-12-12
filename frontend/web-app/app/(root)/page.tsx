@@ -1,4 +1,4 @@
-import Listings from "@/components/auctions/Listings";
+import Listings from "@/app/(root)/components/Listings";
 
 export default function Home() {
   return (

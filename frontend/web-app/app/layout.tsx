@@ -3,8 +3,8 @@ import './globals.css'
 import Navbar from '@/components/navbar/Navbar'
 import React from "react";
 import StyledComponentsRegistry from "@/lib/AntdRegistry";
-import ToasterProvider from '@/providers/ToasterProvider';
-
+import ToasterProvider from '@/app/providers/ToasterProvider';
+import GalleryProvider from '@/app/providers/GalleryProvider';
 
 export const metadata: Metadata = {
   title: 'Carsties',
@@ -20,13 +20,16 @@ export default function RootLayout({
     <html lang="en">
         
         <body>
+          <GalleryProvider>
+            
             <Navbar />
             <main className='container mx-auto px-5 pt-10'>
 
               {children}
             </main>
             <ToasterProvider />
-
+           
+          </GalleryProvider>
         </body>
     </html>
   )

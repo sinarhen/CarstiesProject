@@ -1,4 +1,4 @@
-import {getSession, getTokenWorkaround} from "@/app/actions/authActions";
+import {getSession, getTokenWorkaround} from "@/actions/authActions";
 import Heading from '@/components/Heading'
 import {redirect} from "next/navigation";
 import AuthTest from "@/app/session/AuthTest";
