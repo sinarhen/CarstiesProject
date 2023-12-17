@@ -73,23 +73,18 @@ public class BidsController : ControllerBase{
         await _publishEndpoint.Publish(
             _mapper.Map<BidPlaced>(bid)
         );
+        Console.WriteLine("Bid placed successfully");
         return Ok(_mapper.Map<BidDto>(bid));
 
     }
 
     [HttpGet("{auctionId}")]
     public async Task<ActionResult<List<BidDto>>> GetBids(string auctionId){
-        var auction = await DB.Find<Auction>().OneAsync(auctionId);
-        if(auction == null){
-            return NotFound();
-        }
         var bids = await DB.Find<Bid>()
             .Match(b => b.AuctionId == auctionId)
             .Sort(b => b.Descending(x => x.BidTime))
             .ExecuteAsync();
-
-
-        Console.WriteLine("BIDS BEFORE == ", bids);
+        
         return bids.Select(_mapper.Map<BidDto>).ToList();
     }
 }

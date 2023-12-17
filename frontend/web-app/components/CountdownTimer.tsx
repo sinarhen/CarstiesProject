@@ -1,4 +1,6 @@
 'use client';
+import { useBidStore } from '@/hooks/useBidStore';
+import { usePathname } from 'next/navigation';
 import React from 'react'
 
 import Countdown, {zeroPad} from 'react-countdown';
@@ -16,14 +18,16 @@ const renderer = ({ days, hours, minutes, seconds, completed }: {
     completed: boolean;
     
 }) => {
+
     return (
-        <div className={`
-            border-2 
-            border-white 
+        <div className={` 
             text-white py-1 px-2 
             rounded-lg flex justify-center
+            backdrop-filter backdrop-blur-sm
+            bg-opacity-80 
+            border
             ${completed ? 
-                'bg-red-700' : (days == 0 && hours < 10) ? 'bg-amber-700' : 'bg-green-700'}
+                'bg-red-800 border-red-900' : (days == 0 && hours < 10) ? 'bg-amber-800 border-amber-900' : 'bg-green-800 border-green-900'}
         `}>
            {completed ? (
             <span>Auction finished</span>
@@ -35,10 +39,23 @@ const renderer = ({ days, hours, minutes, seconds, completed }: {
   };
 
 const CountdownTimer: React.FC<CountdownTimerProps> = ({auctionEnd}) => {
+    
+    
+    const setOpen = useBidStore(state => state.setOpen);
+
+    const open = useBidStore(state => state.open);
+    console.log(open)
+    const pathname = usePathname();
+
+    function auctionFinished() {
+        if (pathname.startsWith('/auctions/details')) {
+            setOpen(false);
+        }
+    }
+    
     return (
         <div className='flex'>
-            <Countdown renderer={renderer} date={auctionEnd}/>
-
+            <Countdown renderer={renderer} onComplete={auctionFinished} date={auctionEnd}/>
         </div>
     )
 }

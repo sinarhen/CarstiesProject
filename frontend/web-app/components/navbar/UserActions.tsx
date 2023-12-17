@@ -80,7 +80,7 @@ export default function UserActions({user}: Props){
           </div>
         </DropdownMenuItem>
 
-        <DropdownMenuItem onClick={() => signOut({callbackUrl: "/session"})} className='cursor-pointer duration-500 text-end text-red-700 hover:bg-red-200'>
+        <DropdownMenuItem onClick={() => signOut({callbackUrl: pathname})} className='cursor-pointer duration-500 text-end text-red-700 hover:bg-red-200'>
 
           Sign out
 

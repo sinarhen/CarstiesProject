@@ -15,3 +15,7 @@ export function isValidURLImage(url: string) {
   // Check if the URL is valid for both https and image format
   return urlRegex.test(url) && imageRegex.test(url.toLowerCase());
 }
+
+export function numberWithCommas(amount: number) {
+  return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}

@@ -18,6 +18,8 @@ async function get(url: string){
 }
 
 async function post(url: string, body: {}) {
+    // console.log("[fetchWrapper] get: ", url, " baseUrl: ", baseUrl, " headers:", await getHeaders());
+
     try {
         const requestOptions = {
             method: 'POST',
@@ -77,24 +79,27 @@ async function getHeaders() {
 
 
 async function handleResponse(response: Response){
+    const text = await response.text();
+    let data;
+    
     try {
-        const text = await response.text();
-        const data = text && JSON.parse(text);
-
-        if (!response.ok)
-        {
-            const error = {
-                status: response.status,
-                message: response.statusText
-            };
-            
-            return {error};
-        }
-
-        return data || response.statusText;
-    } catch (error) {
-        throw new Error(`Error in handling response: ${error.message}`);
+        data = JSON.parse(text);        
+    } catch (err: any) {
+        data = text;
     }
+    
+    if (!response.ok)
+    {
+        const error = {
+            status: response.status,
+            message: typeof data === 'string' ? data : response.statusText
+        };
+        
+        return {error};
+    }
+
+    return data || response.statusText;
+
 }
 
 export const fetchWrapper = {

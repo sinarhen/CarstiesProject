@@ -1,6 +1,6 @@
 'use server'
 
-import {Auction, PageResult, TCreateAuctionFormSchema, TEditAuctionFormSchema} from "@/types";
+import {Auction, Bid, PageResult, TCreateAuctionFormSchema, TEditAuctionFormSchema} from "@/types";
 import { fetchWrapper } from "@/lib/fetchWrapper";
 import axios from "axios";
 import { revalidatePath } from "next/cache";
@@ -57,4 +57,18 @@ export async function deleteAuction(id: string) {
   const res = await fetchWrapper.delete('auctions/' + id);
   revalidatePath(`/auctions/details/${id}`);
   return res
+}
+
+export async function getBidsForAuction(id: string): Promise<Bid[]> {
+  const res =  await fetchWrapper.get(`bids/${id}`);
+  revalidatePath(`/auctions/details/${id}`);
+  return res;
+}
+
+export async function placeBidForAuction(auctionId: string, amount: number) {
+  const result = await fetchWrapper.post(`bids?auctionId=${auctionId}&amount=${amount}`, {
+    
+  });
+  revalidatePath(`/auctions/details/${auctionId}`);
+  return result;
 }

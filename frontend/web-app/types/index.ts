@@ -30,6 +30,18 @@ export const editAuctionFormSchema = z.object({
   color: z.string().min(1),
 });
 
+export function constructPlaceBidFormSchema(highBid: number) {
+  const placeBidFormSchema = z.object({
+    amount: z.number()
+    .min(highBid + 1, `Bid must be at least ${highBid + 1}$`)
+    .max(1000 * 1000, "Bid cannot be more than 1000000$")
+    .refine(value => !isNaN(value), {
+      message: "Amount is required and must be a number",
+    })
+  })
+  return placeBidFormSchema;
+}
+
 export type TCreateAuctionFormSchema = z.infer<typeof createAuctionFormSchema>;
 export type TEditAuctionFormSchema = z.infer<typeof editAuctionFormSchema>;
 
@@ -61,4 +73,22 @@ export interface Auction {
   mileage: number;
   imageUrl: string;
   id: string;
+}
+
+
+export type Bid = {
+  id: string;
+  auctionId: string;
+  amount: number;
+  bidder: string;
+  bidTime: string;
+  bidStatus: string;
+}
+
+export type AuctionFinished = {
+  itemSold: boolean
+  auctionId: string
+  winner?: string 
+  seller: string
+  amount?: number
 }

@@ -1,4 +1,4 @@
-import { getAuction } from '@/actions/auctionActions';
+import { getAuction, getBidsForAuction } from '@/actions/auctionActions';
 import Heading from '@/components/Heading';
 import CountdownTimer from '@/components/CountdownTimer';
 import React from 'react';
@@ -7,6 +7,8 @@ import { getCurrentUser } from '@/actions/authActions';
 import { EditButton } from "./components/EditButton";
 import DeleteAuctionButton  from './components/DeleteAuctionButton';
 import ExtendableImage from '@/components/ExtendableImage';
+import BidItem from './components/BidItem';
+import BidList from './components/BidList';
 
 
 export default async function Details({params}: {
@@ -18,14 +20,14 @@ export default async function Details({params}: {
 
   const data = await getAuction(params.id);
   const user = await getCurrentUser();
-
+  
   return (
     <div>
       <div className='flex items-center justify-between'>
         <div>
           <Heading title={data.make + " " + data.model}/>
           {user?.username == data.seller && (
-            <div className='gap-x-3'>
+            <div className='gap-x-3 flex'>
               <EditButton initialValues={data}/>
               <DeleteAuctionButton auctionId={data.id}/>          
             </div>
@@ -39,13 +41,12 @@ export default async function Details({params}: {
 
       </div>
       <div className='grid grid-cols-2 gap-6 mt-3'>
-        <div className='w-full bg-gray-200 rounded-lg overflow-hidden'>
+        <div className='w-full h-fit rounded-lg overflow-hidden'>
           <ExtendableImage imageUrl={data.imageUrl} />
         </div>
-        <div className='border-2 rounded-lg p-2 bg-gray-100'>
-          <Heading title='Bids'/>
-        </div>
-
+        
+        <BidList user={user} auction={data}/>
+        
 
       </div>
 

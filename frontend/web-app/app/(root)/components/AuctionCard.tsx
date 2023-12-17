@@ -5,6 +5,7 @@ import CarImage from '@/components/CarImage';
 import { Auction } from "@/types";
 import React from "react";
 import Link from "next/link";
+import CurrentBid from './CurrentBid';
 
 interface AuctionCardProps {
     auction: Auction;
@@ -21,7 +22,11 @@ const AuctionCard: FC<AuctionCardProps> = ({
                     <div className='absolute bottom-2 left-2'>
                         <CountdownTimer auctionEnd={auction.auctionEnd}/>
                     </div>
-                    
+                    <div className='absolute top-2 right-2'>
+                        <CurrentBid 
+                            reservePrice={auction.reservePrice} 
+                            amount={auction.currentHighBid}/>
+                    </div>
                 </div>
                 <div className='flex justify-between items-center mt-4'>
                     <h3 className='text-grat-700'>{auction.make} {auction.model}</h3>
