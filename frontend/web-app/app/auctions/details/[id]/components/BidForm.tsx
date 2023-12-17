@@ -45,7 +45,12 @@ export default function BidForm({ auctionId, highBid }: Props) {
     form.setValue('amount', highBid + 50);
   }, [highBid, form])
   
-  
+  useEffect(() => {
+    if (form.formState.errors.amount) 
+      {
+        toast.error('Please enter a valid bid amount', {id: 'bid-form-error'});
+      }
+  }, [form.formState.errors.amount])
   return (
       <form onKeyDown={(e) => {
         if (e.key === 'Enter') {
