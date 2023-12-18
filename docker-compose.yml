@@ -112,3 +112,22 @@
       - 7004:80
     depends_on:
       - rabbitmq
+  web-app:
+    image: sinarhen/web-app:latest
+    build: 
+      context: .
+      dockerfile: frontend/web-app/Dockerfile
+    volumes:
+      - /var/lib/web/data
+    ports:
+      - 3000:3000
+    environment:
+      - NEXTAUTH_SECRET=somethingreallyreallysecret
+      - NEXTAUTH_URL=http://web-app
+      - NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME=dhnkvzuxk
+      - NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET=gwuh0xnp
+      - NEXT_PUBLIC_CLOUDINARY_API_KEY=457935262892612
+      - NEXT_PUBLIC_CLOUDINARY_API_SECRET=1fMd5EHb5Ej26RhyjFhIoV7fQTc
+      - API_URL=http://gateway-svc/
+      - ID_URL=http://identity-svc
+      - NEXT_PUBLIC_NOTIFY_URL=http://gateway-svc/notifications
