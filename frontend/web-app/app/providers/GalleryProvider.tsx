@@ -14,9 +14,6 @@ export default function GalleryProvider({children}: {children: React.ReactNode})
     const [openGallery, setOpenGallery] = React.useState<boolean>(false);
     const [galleryImage, setGalleryImage] = React.useState<React.ReactNode>(null);
 
-    useEffect(() => {
-        console.log("Open gallery changed ", openGallery)
-    }, [openGallery])
     return (
         <>
         

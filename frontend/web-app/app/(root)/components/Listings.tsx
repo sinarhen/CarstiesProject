@@ -46,9 +46,9 @@ const Listings = () => {
   const delayPerItem = 0.05;
   
   const [isUpdating, setIsUpdating] = useState(false);
+  const previousPageSize = data?.results?.length - 1 ?? 0;
 
   useEffect(() => {
-    const previousPageSize = data?.results?.length - 1 ?? 0;
     const delayBetweenUpdate = 1000 * 0.5;
     setIsUpdating(true);
     
@@ -63,7 +63,7 @@ const Listings = () => {
     }, transitionDuration * (previousPageSize * (delayPerItem + transitionDuration)) + delayBetweenUpdate);
     
     return () => clearTimeout(timeoutId);
-  }, [url]);
+  }, [url, previousPageSize, setData]);
 
 
   if (loading) return <h3>Is loading...</h3>

@@ -88,16 +88,13 @@ const EditAuctionForm = ({initialValues} : {
         formData
       );
       values.imageUrl = imageUploaded.data.secure_url;
-      console.log(imageUploaded.data.secure_url)
     }
-    console.log("Updatable values: ", values);
     const res = await updateAuction(initialValues.id, values);
     if (res?.error) {
       toast.error(res.error.message || 'Something went wrong');
       return;
     }
     toast.success('Auction updated successfully');
-    console.log(res);
     router.refresh();
   } catch (e: any) {
     toast.error(e?.message || 'Something went wrong');
@@ -118,10 +115,6 @@ const EditAuctionForm = ({initialValues} : {
       setTempSrcUrlForFile(reader.result as string);
     };
   }, [setTempSrcUrlForFile]);
-  console.log("Form state: ", form.formState)
-  useEffect(() => {
-    console.log("Year changed: ", form.getValues('year'))
-  }, [form.getValues('year')])
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-3'>

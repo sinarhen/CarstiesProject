@@ -42,9 +42,6 @@ const CountdownTimer: React.FC<CountdownTimerProps> = ({auctionEnd}) => {
     
     
     const setOpen = useBidStore(state => state.setOpen);
-
-    const open = useBidStore(state => state.open);
-    console.log(open)
     const pathname = usePathname();
 
     function auctionFinished() {

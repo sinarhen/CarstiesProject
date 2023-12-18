@@ -8,8 +8,6 @@ import {
     DialogTitle,
     DialogTrigger
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Auction } from "@/types";
 import EditForm from './EditForm';
 
@@ -28,7 +26,7 @@ export function EditButton({
                 <DialogHeader>
                     <DialogTitle>Edit auction</DialogTitle>
                     <DialogDescription>
-                        Make changes to your auction here. Click save when you're done.
+                        Make changes to your auction here. Click save when you&apos;re done.
                     </DialogDescription>
                 </DialogHeader>
                 <EditForm initialValues={initialValues} />

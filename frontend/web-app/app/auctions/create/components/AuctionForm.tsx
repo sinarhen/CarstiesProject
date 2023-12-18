@@ -161,7 +161,7 @@ const AuctionForm = () => {
                         <SelectContent >
                           {new Array(currentYear - 1886).fill(0)
                             .map((_, i) => (
-                              <SelectItem value={`${currentYear - i}`}>
+                              <SelectItem key={currentYear - i} value={`${currentYear - i}`}>
                                 {currentYear - i}
                               </SelectItem>
                           ))}
@@ -297,11 +297,9 @@ const AuctionForm = () => {
                       style={{display: 'block'}}
                       multiple={false}
                       onChange={(e) => {
-                        if (!e?.target?.files[0]) {
-                          console.log('no file')
+                        if (!e?.target?.files || !e.target.files[0]) {
                           return;
                         }
-                        console.log('file found: ', e?.target?.files[0])
                         field.onChange(e?.target?.files[0])
                         setImageUrlFromFile(e?.target?.files[0]);
                         setInputType("file");

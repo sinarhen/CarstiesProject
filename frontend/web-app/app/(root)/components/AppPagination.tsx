@@ -22,7 +22,6 @@ const AppPagination : React.FC<AppPaginationProps> = ({
 
   for (let i = page - offsetNumberLeft; i <= page + offsetNumberRight; i++) {
     if (i >= 1 && i <= pageCount) {
-      console.log(`Page ${i} is lower than ${pageCount}`)
       pageNumbers.push(i);
     }
   }

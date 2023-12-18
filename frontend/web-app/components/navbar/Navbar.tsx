@@ -6,7 +6,7 @@ import {getCurrentUser} from "@/actions/authActions";
 import UserActions from "@/components/navbar/UserActions";
 
 
-export default async function () {
+export default async function Navbar() {
     const user = await getCurrentUser();
 
     return (

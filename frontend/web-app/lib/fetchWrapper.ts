@@ -1,9 +1,8 @@
 import { getTokenWorkaround } from "@/actions/authActions";
 
-const baseUrl = 'http://localhost:6001/';
+const baseUrl = process.env.API_URL;
 
 async function get(url: string){
-    // console.log("[fetchWrapper] get: ", url, " baseUrl: ", baseUrl, " headers:", await getHeaders());
     try {
         const requestOptions = {
             method: 'GET',
@@ -18,7 +17,6 @@ async function get(url: string){
 }
 
 async function post(url: string, body: {}) {
-    // console.log("[fetchWrapper] get: ", url, " baseUrl: ", baseUrl, " headers:", await getHeaders());
 
     try {
         const requestOptions = {
