@@ -14,20 +14,22 @@ import AuctionFinishedToast from '@/components/AuctionFinishedToast';
 type Props = {
     children: React.ReactNode
     user: User | null;
+    environment: string;
 }
 
-export default function SignalRProvider({ children, user }: Props) {    
+export default function SignalRProvider({ children, user, environment }: Props) {    
   const [connection, setConnection] = useState<HubConnection | null>(null);
   
   const setCurrentPrice = useAuctionStore(state => state.setCurrentPrice);
   const setData = useAuctionStore(state => state.setData);
-
-  
+  const apiUrl = environment === 'production' 
+    ? "https://api.carsties-app.com/notifications" 
+    : process.env.NEXT_PUBLIC_NOTIFY_URL
   const addBid = useBidStore(state => state.addBid);
 
   useEffect(() => {
     const newConnection = new HubConnectionBuilder()
-      .withUrl(process.env.NEXT_PUBLIC_NOTIFY_URL!)
+      .withUrl(apiUrl!)
       .withAutomaticReconnect()
       .build();
       

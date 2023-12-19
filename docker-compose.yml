@@ -1,4 +1,10 @@
-﻿services:
+﻿networks:
+  custom:
+    ipam: 
+      config:
+        - subnet: 10.5.0.0/16
+
+services:
   postgres:
     image: postgres
     environment:
@@ -7,6 +13,8 @@
       - 5432:5432
     volumes:
       - /var/lib/postgresql/data
+    networks:
+      custom:
   mongodb:
     image: mongo
     environment:
@@ -16,11 +24,15 @@
       - 27017:27017
     volumes:
       - /var/lib/mongodb/data
+    networks:
+      custom:
   rabbitmq:
     image: rabbitmq:3-management-alpine
     ports: 
       - 5672:5672
       - 15672:15672
+    networks:
+      custom:
   auction-svc:
     image: sinarhen/auction-svc:latest
     build: 
@@ -42,6 +54,8 @@
     depends_on: 
       - rabbitmq
       - postgres
+    networks:
+      custom:
   search-svc:
     image: sinarhen/search-svc:latest
     build: 
@@ -57,7 +71,9 @@
       - 7002:80
     depends_on: 
       - rabbitmq
-      - mongodb  
+      - mongodb
+    networks:
+      custom:  
   identity-svc:
     image: sinarhen/identity-svc:latest
     build:
@@ -68,10 +84,13 @@
       - ASPNETCORE_URLS=http://+:80
       - ConnectionStrings__DefaultConnection=Server=postgres:5432;User Id=postgres;Password=postgrespw;Database=identity
       - IdentityServiceUrl=http://identity-svc
-    ports:
-      - 5000:80
+      - VIRTUAL_HOST=id.carsties-app.com
+      - ClientApp=https://app.carsties-app.com
     depends_on:
-      - postgres   
+      - postgres
+    networks:
+      custom:
+        ipv4_address: 10.5.0.200   
   gateway-svc:
     image: sinarhen/gateway-svc:latest
     build:
@@ -80,8 +99,10 @@
     environment:
       - ASPNETCORE_ENVIRONMENT=Docker
       - ASPNETCORE_URLS=http://+:80
-    ports:
-      - 6001:80
+      - ClientApp=https://app.carsties-app.com
+      - VIRTUAL_HOST=api.carsties-app.com
+    networks:
+      custom:
   bid-svc:
     image: sinarhen/bid-svc:latest
     build: 
@@ -98,7 +119,9 @@
       - 7003:80
     depends_on: 
       - rabbitmq
-      - mongodb  
+      - mongodb
+    networks:
+      custom:  
   notify-svc:
     image: sinarhen/notify-svc:latest
     build:
@@ -112,6 +135,8 @@
       - 7004:80
     depends_on:
       - rabbitmq
+    networks:
+      custom:
   web-app:
     image: sinarhen/web-app:latest
     build: 
@@ -119,15 +144,30 @@
       dockerfile: frontend/web-app/Dockerfile
     volumes:
       - /var/lib/web/data
-    ports:
-      - 3000:3000
+    extra_hosts:
+      - id.carsties-app.com:10.5.0.200
     environment:
       - NEXTAUTH_SECRET=somethingreallyreallysecret
-      - NEXTAUTH_URL=http://web-app
+      - NEXTAUTH_URL=http://app.carsties-app.com
+      - NEXTAUTH_URL_INTERNAL=http://web-app:3000
       - NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME=dhnkvzuxk
       - NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET=gwuh0xnp
       - NEXT_PUBLIC_CLOUDINARY_API_KEY=457935262892612
       - NEXT_PUBLIC_CLOUDINARY_API_SECRET=1fMd5EHb5Ej26RhyjFhIoV7fQTc
       - API_URL=http://gateway-svc/
-      - ID_URL=http://identity-svc
+      - ID_URL=http://id.carsties-app.com
       - NEXT_PUBLIC_NOTIFY_URL=http://gateway-svc/notifications
+      - VIRTUAL_HOST=app.carsties-app.com
+      - VIRTUAL_PORT=3000
+    networks:
+      custom:
+  nginx-proxy:
+    image: nginxproxy/nginx-proxy
+    ports:
+      - 80:80
+      - 443:443
+    networks:
+      custom:
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+      - ./devcerts:/etc/nginx/certs

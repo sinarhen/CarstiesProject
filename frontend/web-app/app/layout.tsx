@@ -27,7 +27,7 @@ export default async function RootLayout({
             
             <Navbar />
             <main className='container mx-auto px-5 pt-10'>
-              <SignalRProvider user={user}>
+              <SignalRProvider environment={process.env.NODE_ENV} user={user}>
                 {children}
 
               </SignalRProvider>
