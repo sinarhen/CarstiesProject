@@ -11,7 +11,7 @@ You can run this app locally on your computer by following these instructions:
 1. Using your terminal or command prompt clone the repo onto your machine in a user folder 
 
 ```
-git clone https://github.com/TryCatchLearn/Carsties.git
+git clone https://github.com/sinarhen/CarstiesProject
 ```
 2. Change into the Carsties directory
 ```
