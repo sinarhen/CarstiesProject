@@ -38,7 +38,7 @@ export default function BidForm({ auctionId, highBid }: Props) {
       if (bid.error) throw bid.error;
       addBid(bid);
       toast.success('Bid placed successfully');
-    }).catch(err => toast.error(err.message))
+    }).catch(err => toast.error(err.status))
   };
 
   useEffect(() => { 

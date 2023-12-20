@@ -8,7 +8,7 @@ async function get(url: string){
             method: 'GET',
             headers: {}
         };
-        
+        console.log("[GET] " + baseUrl + url )
         const response = await fetch(baseUrl + url, requestOptions);
         return await handleResponse(response);
     } catch (error: any) {
@@ -17,7 +17,7 @@ async function get(url: string){
 }
 
 async function post(url: string, body: {}) {
-
+    console.log("[POST] " + baseUrl + url + " " + JSON.stringify(body));
     try {
         const requestOptions = {
             method: 'POST',
@@ -95,6 +95,8 @@ async function handleResponse(response: Response){
         
         return {error};
     }
+    
+    console.log("[RESPONSE] " + response);
 
     return data || response.statusText;
 

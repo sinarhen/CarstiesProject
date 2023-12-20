@@ -13,7 +13,7 @@ import AuctionFinishedToast from '@/components/AuctionFinishedToast';
 
 type Props = {
     children: React.ReactNode
-    user: User | null;
+  user: User | null;
     environment: string;
 }
 
