@@ -16,6 +16,14 @@ public class AuctionDeletedFaultConsumer : IConsumer<Fault<AuctionDeleted>>
 
     public async Task Consume(ConsumeContext<Fault<AuctionDeleted>> context)
     {
-        
+        // var message = context.Message;
+        // var auction = _mapper.Map<Auction>(message.Message);
+
+        // await context.Publish(new AuctionDeletedFaulted
+        // {
+        //     Auction = auction,
+        //     Message = message.Exceptions.FirstOrDefault()?.Message
+        // });
+        await Task.CompletedTask;
     }
 }
