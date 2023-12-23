@@ -74,7 +74,7 @@ public class AuctionsController : ControllerBase
     
     [Authorize]
     [HttpPut("{id}")]
-    public async Task<IActionResult> UpdateAuction(Guid id, UpdateAuctionDto auctionDto)
+    public async Task<ActionResult> UpdateAuction(Guid id, UpdateAuctionDto auctionDto)
     {
         var auction = await _repo.GetAuctionEntityById(id);
 
