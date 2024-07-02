@@ -1,5 +1,5 @@
 # Microservices Udemy Course repository
-I made this application for studying purposes, with course on Udemy which you can see [here](https://www.udemy.com/course/build-a-microservices-app-with-dotnet-and-nextjs-from-scratch/?couponCode=NEWCOURSEPROM) 
+I made this application for studying purposes
 
 ## Project architecture 
 ![image](https://github.com/sinarhen/CarstiesProject/assets/105736826/7e6f1b3f-d766-4b57-8797-ca99c3567211)
